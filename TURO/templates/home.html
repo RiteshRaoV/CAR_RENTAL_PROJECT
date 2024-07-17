@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="home">
+  <div class="main-sec">
+      <div class="left">
+          <p class="txt1">Easy And Fast Way To <span style="color: #0043ff8c;">Rent</span> Your Car</p>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore accusamus nobis similique ab
+              praesentium itaque dolore quidem debitis distinctio laborum!</p>
+          <div class="btn">
+              <input class="car" type="button" value="Rent Car">
+          </div>
+      </div>
+
+      <div class="right">
+          <img src="bmw-22428.png" alt="">
+      </div>
+  </div>
+</div>
+<section class="car-sec">
+  <div class="txt">
+      <p class="txt1">Latest <span>Inventory</span></p>
+      <p class="txt2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam, ipsa!</p>
+  </div>
+
+  <div class="main-sec">
+    {% for car in vehicles %}
+    <div class="box">
+        <img style="width: 365px;"
+            src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8N3x8fGVufDB8fHx8fA%3D%3D"
+            alt="Car Image">
+        <div class="details">
+            <p class="car-name">{{ car.make }} {{ car.model }}</p>
+            <div class="review">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-regular fa-star-half-stroke"></i>
+                <p>(10k Reviews)</p>
+            </div>
+            <div class="feature">
+                {% for feature in car.features.all %}
+                <p> {{ feature.name }}</p>
+                {% endfor %}
+            </div> 
+            <div class="price">
+                <p>{{ car.price_per_day }}</p>
+                <button>Book Now</button>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+  {% comment %} <div class="main-sec">
+      <div class="box">
+          <p class="txt1">4000+</p>
+          <p>Active Member</p>
+      </div>
+
+      <div class="box">
+          <p class="txt1">3000+</p>
+          <p>Car Color</p>
+      </div>
+
+      <div class="box">
+          <p class="txt1">6000+</p>
+          <p>Car Model</p>
+      </div>
+
+      <div class="box">
+          <p class="txt1">10k</p>
+          <p>Positive Rating</p>
+      </div>
+  </div>
+</section> {% endcomment %}
+
+{% endblock content %}

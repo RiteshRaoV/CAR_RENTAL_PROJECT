@@ -1,0 +1,274 @@
+/* Resetting default margins and paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', 'Helvetica', sans-serif;
+}
+
+/* Navigation bar styling */
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 50px;
+    height: 70px;
+    background-color: #f8f9fa;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.nav .item {
+    display: flex;
+    column-gap: 30px;
+}
+
+.nav .btn {
+    display: flex;
+    column-gap: 20px;
+}
+
+.nav .btn input,
+.nav .btn .login {
+    padding: 10px 30px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.nav .btn input {
+    background-color: #0043ff8c;
+    color: white;
+}
+
+.nav .btn input:hover {
+    background-color: #0043ff8c;
+}
+
+.nav .btn .login {
+    border: 2px solid #0043ff8c;
+    background-color: white;
+    color: #0043ff8c;
+}
+
+.nav .btn .login:hover {
+    background-color: #0043ff8c;
+    color: white;
+}
+
+.nav .item a {
+    text-decoration: none;
+    color: #343a40;
+    font-weight: 700;
+    transition: color 0.3s ease;
+}
+
+.nav .item a:hover {
+    color: #0043ff8c;
+}
+
+.nav .item .home-btn {
+    color: #0043ff8c;
+    font-weight: 700;
+}
+
+/* Home section styling */
+.home {
+    background-color: #f1f3f5;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.home .main-sec {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 50px;
+}
+
+.home .right {
+    width: 400px;
+    height: 300px;
+    padding: 30px;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.home .right img {
+    width: 50vw;
+    filter: drop-shadow(20px 50px 25px rgba(0, 0, 0, 0.1));
+}
+
+.home .left {
+    padding: 30px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 552px;
+}
+
+.home .left .btn input {
+    padding: 10px 30px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    background-color: #0043ff8c;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.home .left .btn input:hover {
+    background-color: #0056b3;
+}
+
+.home .main-sec .left .txt1 {
+    font-size: 4rem;
+    font-weight: 700;
+    color: #343a40;
+    margin-bottom: 20px;
+}
+
+/* Car section styling */
+.car-sec {
+    padding: 30px;
+    background-color: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+}
+
+.car-sec .btn input {
+    padding: 10px 25px;
+    border: 1px solid #6c757d;
+    border-radius: 25px;
+    cursor: pointer;
+    background-color: #0043ff8c;
+    color: white;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+}
+
+.car-sec .btn input:hover {
+    background-color: #0056b3;
+}
+
+.car-sec .main-sec {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+    column-gap: 20px;
+    flex-wrap: wrap;
+    row-gap: 20px;
+}
+
+.car-sec .main-sec .box {
+    overflow: hidden;
+    width: 365px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 15px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.car-sec .main-sec .box:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.car-sec .main-sec .box .details {
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    row-gap: 15px;
+}
+
+.car-sec .main-sec .box .details .car-name {
+    font-size: 23px;
+    font-weight: 700;
+    color: #343a40;
+}
+
+.car-sec .main-sec .box .review {
+    display: flex;
+    column-gap: 5px;
+}
+
+.car-sec .main-sec .box .review i {
+    color: orange;
+}
+
+.car-sec .main-sec .box .review p {
+    color: #6c757d;
+}
+
+.car-sec .main-sec .box .feature {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 70px;
+    row-gap: 20px;
+}
+
+.car-sec .main-sec .box .feature p i {
+    color: #0043ff8c;
+    font-size: 20px;
+}
+
+.car-sec .main-sec .box .price {
+    display: flex;
+    border-top: 1px solid #6c757d;
+    column-gap: 167px;
+    padding-top: 20px;
+    align-items: center;
+}
+
+.car-sec .main-sec .box .price p {
+    font-size: 20px;
+    font-weight: 700;
+    color: #343a40;
+}
+
+.car-sec .main-sec .box .price button {
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    background-color: #0043ff8c;
+    color: white;
+    height: 35px;
+    width: 100px;
+    transition: background-color 0.3s ease;
+}
+
+.car-sec .main-sec .box .price button:hover {
+    background-color: #0056b3;
+}
+
+.car-sec .txt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 10px;
+    margin-bottom: 30px;
+}
+
+.car-sec .txt .txt1 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #343a40;
+}
+
+.car-sec .txt .txt1 span {
+    color: #0043ff8c;
+}
