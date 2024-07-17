@@ -1,13 +1,50 @@
 from django.urls import path
-
-from TURO import views
-from django.conf import settings
-from django.conf.urls.static import static
+from .views import (
+    FeatureListCreate,
+    FeatureDetail,
+    UserProfileListCreate,
+    UserProfileDetail,
+    VehicleListCreate,
+    VehicleDetail,
+    VehicleImagesListCreate,
+    VehicleImagesDetail,
+    ReservationListCreate,
+    ReservationDetail,
+    ReviewListCreate,
+    ReviewDetail,
+)
 
 urlpatterns = [
-    path("available-vehicles/",views.Getalldata.as_view()),
-    path("get-vehicle/<int:id>",views.GetVehicleById.as_view()),
-    path("add-vehicle/",views.AddNewVehicle.as_view()),
-    path("all-features/",views.GetAllFeatures.as_view()),
-    path("update-vehicleDetails/<int:id>",views.UpdateVehicleDetails.as_view())
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path("features/", FeatureListCreate.as_view(), name="feature-list-create"),
+    path("features/<int:pk>/", FeatureDetail.as_view(), name="feature-detail"),
+    path(
+        "user-profiles/",
+        UserProfileListCreate.as_view(),
+        name="userprofile-list-create",
+    ),
+    path(
+        "user-profiles/<int:pk>/",
+        UserProfileDetail.as_view(),
+        name="userprofile-detail",
+    ),
+    path("vehicles/", VehicleListCreate.as_view(), name="vehicle-list-create"),
+    path("vehicles/<int:pk>/", VehicleDetail.as_view(), name="vehicle-detail"),
+    path(
+        "vehicle-images/",
+        VehicleImagesListCreate.as_view(),
+        name="vehicleimages-list-create",
+    ),
+    path(
+        "vehicle-images/<int:pk>/",
+        VehicleImagesDetail.as_view(),
+        name="vehicleimages-detail",
+    ),
+    path(
+        "reservations/", ReservationListCreate.as_view(), name="reservation-list-create"
+    ),
+    path(
+        "reservations/<int:pk>/", ReservationDetail.as_view(), name="reservation-detail"
+    ),
+    path("reviews/", ReviewListCreate.as_view(), name="review-list-create"),
+    path("reviews/<int:pk>/", ReviewDetail.as_view(), name="review-detail"),
+]
