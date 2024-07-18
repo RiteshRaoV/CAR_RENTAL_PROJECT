@@ -12,6 +12,8 @@ urlpatterns = [
          views.VehicleDocumentUploadView.as_view(), name='vehicle-upload-documents'),
     path('update-vehicle-details/<int:pk>/',
          views.UpdateVehicleDetails.as_view()),
+    path('upload-vehicle-image/',
+         views.UploadVehicleImageView.as_view()),
     path('all-features/',views.FeatureView.as_view()),
     path('vehicle-feature-delete/<int:vehicle_id>/features/<int:feature_id>/', views.RemoveVehicleFeatureView.as_view(), name='remove-vehicle-feature'),
     path('delete-vehicle/<int:vehicle_id>/',views.DeleteVehicleView.as_view()),

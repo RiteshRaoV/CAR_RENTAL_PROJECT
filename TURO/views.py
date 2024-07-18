@@ -1,5 +1,5 @@
-from TURO.models import Feature, Reservation, Vehicle
-from TURO.serializers import  ApproveReservationSerializer, FeatureSerializer, ReservationSerializer, VehicleBasicDetailsSerializer, VehicleDetails, VehicleDocumentSerializer,UpdateVehicleBasicDetailsSerializer
+from TURO.models import Feature, Reservation, Vehicle, VehicleImages
+from TURO.serializers import  ApproveReservationSerializer, FeatureSerializer, ReservationSerializer, UploadVehicleImageSerializer, VehicleBasicDetailsSerializer, VehicleDetails, VehicleDocumentSerializer,UpdateVehicleBasicDetailsSerializer
 from django.db.models import Q
 from rest_framework import generics
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -29,7 +29,12 @@ class VehicleDocumentUploadView(generics.UpdateAPIView):
     
     def get_object(self):
         return Vehicle.objects.get(pk=self.kwargs['pk'])
-    
+
+class UploadVehicleImageView(generics.CreateAPIView):
+    queryset = VehicleImages.objects.all()
+    serializer_class = UploadVehicleImageSerializer
+    parser_classes = (MultiPartParser, FormParser)
+
 class FeatureView(generics.ListAPIView):
     queryset=Feature.objects.all()
     serializer_class = FeatureSerializer

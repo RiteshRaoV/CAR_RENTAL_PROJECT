@@ -2,7 +2,7 @@ from TURO.models import Feature, Vehicle
 from rest_framework import serializers
 
 from rest_framework.exceptions import ValidationError
-from .models import Reservation
+from .models import Reservation, VehicleImages
 
 class FeatureSerializer(serializers.ModelSerializer):
     class Meta:
@@ -141,4 +141,7 @@ class ApproveReservationSerializer(serializers.Serializer):
     reservation_id = serializers.IntegerField()
     otp = serializers.CharField(max_length=6)
 
-    
+class UploadVehicleImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VehicleImages
+        fields = '__all__'
