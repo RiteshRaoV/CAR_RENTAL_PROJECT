@@ -14,7 +14,9 @@ urlpatterns = [
          views.UpdateVehicleDetails.as_view()),
     path('all-features/',views.FeatureView.as_view()),
     path('vehicle-feature-delete/<int:vehicle_id>/features/<int:feature_id>/', views.RemoveVehicleFeatureView.as_view(), name='remove-vehicle-feature'),
-    path('delete-vehicle/<int:vehicle_id>/',views.DeleteVehicleView.as_view())
+    path('delete-vehicle/<int:vehicle_id>/',views.DeleteVehicleView.as_view()),
+    path('reservations/', views.CreateReservationView.as_view(), name='create-reservation'),
+    path('approve-reservation/',views.ApproveReservationView.as_view())
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

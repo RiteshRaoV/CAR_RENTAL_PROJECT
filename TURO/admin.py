@@ -11,7 +11,7 @@ class VehicleAdmin(admin.ModelAdmin):
 
 
 class ReservationAdmin(admin.ModelAdmin):
-    list_display = ('vehicle', 'user', 'start_date', 'end_date', 'total_price', 'status', 'created_at', 'updated_at', 'otp')
+    list_display = ('id','vehicle', 'user', 'start_date', 'end_date', 'total_price', 'status', 'created_at', 'updated_at', 'otp')
     search_fields = ('vehicle__make', 'vehicle__model', 'user__username', 'status')
     list_filter = ('status', 'start_date', 'end_date', 'created_at')
     autocomplete_fields = ['vehicle', 'user']
