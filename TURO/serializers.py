@@ -33,11 +33,22 @@ class VehicleDetails(serializers.ModelSerializer):
 
 class VehicleBasicDetailsSerializer(serializers.ModelSerializer):
     features = FeatureSerializer(many=True)
+    thumbnail = serializers.SerializerMethodField()
 
     class Meta:
         model = Vehicle
-        fields = "__all__"
-
+        fields = ['id', 'category', 'make', 'model', 'thumbnail', 'engine_capacity', 'year', 'price_per_day',
+                  'city', 'address', 'location', 'fuel_type', 'availability', 'created_at',
+                  'updated_at', 'registration_document', 'insurance_document', 'owner', 'features'
+                  ]
+        
+    def get_thumbnail(self, obj):
+        images = VehicleImages.objects.filter(vehicle=obj)
+        for image in images:
+            if image.thumbnail_image:
+                return image.thumbnail_image.url
+        return None
+    
     def create(self, validated_data):
         # Extract features data
         features_data = validated_data.pop('features')
