@@ -3,7 +3,7 @@ from .models import Vehicle, Reservation, Review, Feature, UserProfile,VehicleIm
 
 
 class VehicleAdmin(admin.ModelAdmin):
-    list_display = ('make', 'model', 'year', 'price_per_day', 'location', 'availability', 'owner', 'created_at', 'updated_at')
+    list_display = ('id','make', 'model', 'year', 'price_per_day', 'location', 'availability', 'owner', 'created_at', 'updated_at')
     search_fields = ('make', 'model', 'location', 'owner__username')
     list_filter = ('availability', 'year', 'location', 'created_at')
     autocomplete_fields = ['owner']

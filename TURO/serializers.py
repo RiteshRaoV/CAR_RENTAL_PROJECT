@@ -140,8 +140,26 @@ class ReservationSerializer(serializers.ModelSerializer):
 class ApproveReservationSerializer(serializers.Serializer):
     reservation_id = serializers.IntegerField()
     otp = serializers.CharField(max_length=6)
+    
 
 class UploadVehicleImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = VehicleImages
         fields = '__all__'
+
+class UserReservationSerializer(serializers.ModelSerializer):
+    vehicle_make = serializers.CharField(source='vehicle.make')
+    vehicle_model = serializers.CharField(source='vehicle.model')
+    vehicle_id = serializers.IntegerField(source = 'vehicle.id')
+    class Meta:
+        model = Reservation
+        fields = ['id','vehicle_id' ,'vehicle_make', 'vehicle_model', 'user', 'start_date', 'end_date','status']
+
+class VehicleReservationSerializer(serializers.ModelSerializer):
+    vehicle_make = serializers.CharField(source='vehicle.make')
+    vehicle_model = serializers.CharField(source='vehicle.model')
+    vehicle_id = serializers.IntegerField(source = 'vehicle.id')
+    reservation_id = serializers.IntegerField(source = 'id')
+    class Meta:
+        model = Reservation
+        fields = ['reservation_id','vehicle_id' ,'vehicle_make', 'vehicle_model', 'user', 'start_date', 'end_date','total_price','status']
