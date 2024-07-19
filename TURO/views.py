@@ -1,4 +1,4 @@
-from TURO.models import Feature, Reservation, Vehicle, VehicleImages
+from TURO.models import Feature, Reservation, UserProfile, Vehicle, VehicleImages
 from TURO.serializers import (ApproveReservationSerializer, FeatureSerializer, ReservationSerializer, 
                                UploadVehicleImagesSerializer, UserReservationSerializer, 
                               VehicleBasicDetailsSerializer, VehicleDetails, VehicleDocumentSerializer, 
@@ -106,8 +106,24 @@ class CreateReservationView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = ReservationSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            user_id = serializer.validated_data['user']
+            try:
+                user = UserProfile.objects.get(user=user_id)
+            except UserProfile.DoesNotExist:
+                return Response({'error': 'UserProfile does not exist for the provided user ID'}, status=status.HTTP_404_NOT_FOUND)
+            if user.dl_image and user.aadhar_image:
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                missing_docs = []
+                if not user.dl_image:
+                    missing_docs.append('Driving License')
+                if not user.aadhar_image:
+                    missing_docs.append('Aadhar Card')
+
+                missing_docs_str = ', '.join(missing_docs)
+                return Response({'error': f'Please upload your {missing_docs_str}'}, status=status.HTTP_400_BAD_REQUEST)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class CancelReservationView(APIView):
