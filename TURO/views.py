@@ -33,6 +33,9 @@ class UpdateVehicleDetails(generics.UpdateAPIView):
     @swagger_auto_schema(tags=['Vehicle'])
     def put(self, request, *args, **kwargs):
         return super().put(request, *args, **kwargs)
+    @swagger_auto_schema(tags=['Vehicle'])
+    def patch(self, request, *args, **kwargs):
+        return super().patch(request, *args, **kwargs)
 
 class VehicleDocumentUploadView(generics.UpdateAPIView):
     queryset = Vehicle.objects.all()
@@ -49,6 +52,9 @@ class UploadVehicleImageView(APIView):
         if serializer.is_valid():
             vehicle = serializer.validated_data['vehicle']
             images = request.FILES.getlist('images')
+            thumbnail = request.FILES.get('thumbnail')
+            if thumbnail:
+                VehicleImages.objects.create(vehicle=vehicle,thumbnail_image = thumbnail)
             for image in images:
                 VehicleImages.objects.create(vehicle=vehicle, vehicle_image=image)
             return Response({"message": "Images uploaded successfully!"}, status=status.HTTP_201_CREATED)

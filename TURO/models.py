@@ -16,7 +16,8 @@ class UserProfile(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile"
     )
-    aadhar_image = models.ImageField(upload_to="aadhar/", blank=True, null=True)
+    aadhar_image = models.ImageField(
+        upload_to="aadhar/", blank=True, null=True)
     dl_image = models.ImageField(upload_to="dl/", blank=True, null=True)
     city = models.CharField(max_length=100)
     address = models.CharField(max_length=255)
@@ -32,6 +33,13 @@ class Vehicle(models.Model):
     category = models.CharField(max_length=10)
     make = models.CharField(max_length=100)
     model = models.CharField(max_length=100)
+    engine_capacity = models.IntegerField(
+        default=0,
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(10000)
+        ]
+    )
     year = models.IntegerField(default=0)
     price_per_day = models.DecimalField(max_digits=10, decimal_places=2)
     city = models.CharField(max_length=255)
@@ -39,7 +47,8 @@ class Vehicle(models.Model):
     location = models.CharField(max_length=100)
     fuel_type = models.CharField(max_length=10)
     availability = models.BooleanField(default=True)
-    features = models.ManyToManyField(Feature, related_name="vehicles", blank=True)
+    features = models.ManyToManyField(
+        Feature, related_name="vehicles", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     registration_document = models.ImageField(
@@ -57,7 +66,9 @@ class VehicleImages(models.Model):
     vehicle = models.ForeignKey(
         Vehicle, on_delete=models.CASCADE, related_name="images", default=None
     )
-    vehicle_image = models.ImageField(upload_to="vehicle_image/", blank=True, null=True)
+    thumbnail_image = models.ImageField(upload_to="thumbnails/",blank=True,null=True)
+    vehicle_image = models.ImageField(
+        upload_to="vehicle_image/", blank=True, null=True)
 
 
 class Reservation(models.Model):
@@ -77,7 +88,8 @@ class Reservation(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
-    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default="pending")
+    status = models.CharField(
+        max_length=50, choices=STATUS_CHOICES, default="pending")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     otp = models.CharField(max_length=6, blank=True, null=True)

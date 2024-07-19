@@ -1,8 +1,11 @@
+import random
+from pyexpat import model
 from TURO.models import Feature, Vehicle
 from rest_framework import serializers
 
 from rest_framework.exceptions import ValidationError
 from .models import Reservation, VehicleImages
+
 
 class FeatureSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,9 +14,21 @@ class FeatureSerializer(serializers.ModelSerializer):
 
 
 class VehicleDetails(serializers.ModelSerializer):
+    thumbnail = serializers.SerializerMethodField()
+
     class Meta:
         model = Vehicle
-        fields = '__all__'
+        fields = ['id', 'category', 'make', 'model', 'thumbnail', 'engine_capacity', 'year', 'price_per_day',
+                  'city', 'address', 'location', 'fuel_type', 'availability', 'created_at',
+                  'updated_at', 'registration_document', 'insurance_document', 'owner', 'features'
+                  ]
+
+    def get_thumbnail(self, obj):
+        images = VehicleImages.objects.filter(vehicle=obj)
+        for image in images:
+            if image.thumbnail_image:
+                return image.thumbnail_image.url
+        return None
 
 
 class VehicleBasicDetailsSerializer(serializers.ModelSerializer):
@@ -79,7 +94,7 @@ class UpdateVehicleBasicDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Vehicle
-        fields = ['make', 'model', 'year', 'price_per_day', 'city',
+        fields = ['make', 'model', 'engine_capacity', 'year', 'price_per_day', 'city',
                   'address', 'location', 'fuel_type', 'availability', 'features']
 
     def update(self, instance, validated_data):
@@ -100,7 +115,6 @@ class UpdateVehicleBasicDetailsSerializer(serializers.ModelSerializer):
         return instance
 
 
-import random
 class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation
@@ -110,7 +124,7 @@ class ReservationSerializer(serializers.ModelSerializer):
         vehicle = validated_data['vehicle']
         start_date = validated_data['start_date']
         end_date = validated_data['end_date']
-        
+
         # Calculate the number of days
         num_days = (end_date - start_date).days
         total_price = num_days * vehicle.price_per_day
@@ -119,7 +133,8 @@ class ReservationSerializer(serializers.ModelSerializer):
         otp = random.randint(100000, 999999)
         # Check if the vehicle is available
         if not vehicle.availability:
-            raise ValidationError("The vehicle is not available for reservation.")            
+            raise ValidationError(
+                "The vehicle is not available for reservation.")
         # Create the reservation
         reservation = Reservation.objects.create(
             vehicle=vehicle,
@@ -136,19 +151,23 @@ class ReservationSerializer(serializers.ModelSerializer):
         vehicle.save()
 
         return reservation
-    
+
+
 class ApproveReservationSerializer(serializers.Serializer):
     reservation_id = serializers.IntegerField()
     otp = serializers.CharField(max_length=6)
-    
+
 
 class VehicleImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = VehicleImages
         fields = ['vehicle_image']
 
+
 class UploadVehicleImagesSerializer(serializers.Serializer):
-    vehicle = serializers.PrimaryKeyRelatedField(queryset=Vehicle.objects.all())
+    vehicle = serializers.PrimaryKeyRelatedField(
+        queryset=Vehicle.objects.all())
+    thumbnail = serializers.ImageField(write_only=True, required=False)
     images = serializers.ListField(
         child=serializers.ImageField(max_length=100000),
         write_only=True
@@ -158,16 +177,21 @@ class UploadVehicleImagesSerializer(serializers.Serializer):
 class UserReservationSerializer(serializers.ModelSerializer):
     vehicle_make = serializers.CharField(source='vehicle.make')
     vehicle_model = serializers.CharField(source='vehicle.model')
-    vehicle_id = serializers.IntegerField(source = 'vehicle.id')
+    vehicle_id = serializers.IntegerField(source='vehicle.id')
+
     class Meta:
         model = Reservation
-        fields = ['id','vehicle_id' ,'vehicle_make', 'vehicle_model', 'user', 'start_date', 'end_date','status']
+        fields = ['id', 'vehicle_id', 'vehicle_make',
+                  'vehicle_model', 'user', 'start_date', 'end_date', 'status']
+
 
 class VehicleReservationSerializer(serializers.ModelSerializer):
     vehicle_make = serializers.CharField(source='vehicle.make')
     vehicle_model = serializers.CharField(source='vehicle.model')
-    vehicle_id = serializers.IntegerField(source = 'vehicle.id')
-    reservation_id = serializers.IntegerField(source = 'id')
+    vehicle_id = serializers.IntegerField(source='vehicle.id')
+    reservation_id = serializers.IntegerField(source='id')
+
     class Meta:
         model = Reservation
-        fields = ['reservation_id','vehicle_id' ,'vehicle_make', 'vehicle_model', 'user', 'start_date', 'end_date','total_price','status']
+        fields = ['reservation_id', 'vehicle_id', 'vehicle_make', 'vehicle_model',
+                  'user', 'start_date', 'end_date', 'total_price', 'status']
