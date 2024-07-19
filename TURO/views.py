@@ -22,6 +22,10 @@ class AddVehicleBasicDetails(generics.ListCreateAPIView):
     @swagger_auto_schema(tags=['Vehicle'])
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
+    
+    @swagger_auto_schema(tags=['Vehicle'])
+    def get(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
 
 
 class GetVehicleDetails(generics.RetrieveAPIView):
@@ -54,6 +58,10 @@ class VehicleDocumentUploadView(generics.UpdateAPIView):
 
     @swagger_auto_schema(tags=['Vehicle'])
     def put(self, request, *args, **kwargs):
+        return super().put(request, *args, **kwargs)
+    
+    @swagger_auto_schema(tags=['Vehicle'])
+    def patch(self, request, *args, **kwargs):
         return super().put(request, *args, **kwargs)
 
 
