@@ -66,7 +66,8 @@ class VehicleImages(models.Model):
     vehicle = models.ForeignKey(
         Vehicle, on_delete=models.CASCADE, related_name="images", default=None
     )
-    thumbnail_image = models.ImageField(upload_to="thumbnails/",blank=True,null=True)
+    thumbnail_image = models.ImageField(
+        upload_to="thumbnails/", blank=True, null=True)
     vehicle_image = models.ImageField(
         upload_to="vehicle_image/", blank=True, null=True)
 

@@ -4,7 +4,7 @@ from TURO.models import Feature, Vehicle
 from rest_framework import serializers
 
 from rest_framework.exceptions import ValidationError
-from .models import Reservation, VehicleImages
+from .models import Reservation, UserProfile, VehicleImages
 
 
 class FeatureSerializer(serializers.ModelSerializer):
@@ -195,3 +195,9 @@ class VehicleReservationSerializer(serializers.ModelSerializer):
         model = Reservation
         fields = ['reservation_id', 'vehicle_id', 'vehicle_make', 'vehicle_model',
                   'user', 'start_date', 'end_date', 'total_price', 'status']
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = '__all__'
