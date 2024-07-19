@@ -1,6 +1,6 @@
 from TURO.models import Feature, Reservation, Vehicle, VehicleImages
 from TURO.serializers import (ApproveReservationSerializer, FeatureSerializer, ReservationSerializer, 
-                              UploadVehicleImageSerializer, UserReservationSerializer, 
+                               UploadVehicleImagesSerializer, UserReservationSerializer, 
                               VehicleBasicDetailsSerializer, VehicleDetails, VehicleDocumentSerializer, 
                               UpdateVehicleBasicDetailsSerializer, VehicleReservationSerializer)
 from django.db.models import Q
@@ -42,13 +42,17 @@ class VehicleDocumentUploadView(generics.UpdateAPIView):
     def put(self, request, *args, **kwargs):
         return super().put(request, *args, **kwargs)
 
-class UploadVehicleImageView(generics.CreateAPIView):
-    queryset = VehicleImages.objects.all()
-    serializer_class = UploadVehicleImageSerializer
-    parser_classes = (MultiPartParser, FormParser)
+class UploadVehicleImageView(APIView):
     @swagger_auto_schema(tags=['Vehicle'])
     def post(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
+        serializer = UploadVehicleImagesSerializer(data=request.data)
+        if serializer.is_valid():
+            vehicle = serializer.validated_data['vehicle']
+            images = request.FILES.getlist('images')
+            for image in images:
+                VehicleImages.objects.create(vehicle=vehicle, vehicle_image=image)
+            return Response({"message": "Images uploaded successfully!"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Feature Views
 class FeatureView(generics.ListAPIView):
@@ -114,11 +118,14 @@ class CancelReservationView(APIView):
 
             try:
                 reservation = Reservation.objects.get(id=reservation_id)
+                vehicle = reservation.vehicle
                 if reservation.otp == otp:
                     reservation.status = 'cancelled'
                     reservation.otp=' '
                     reservation.total_price=0
                     reservation.save()
+                    vehicle.availability = True
+                    vehicle.save()
                     return Response({'status': 'Reservation Cancelled'}, status=status.HTTP_200_OK)
                 else:
                     return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)

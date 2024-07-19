@@ -24,7 +24,7 @@ class ReviewAdmin(admin.ModelAdmin):
 
 
 class FeatureAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('id','name',)
     search_fields = ('name',)
 
 

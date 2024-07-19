@@ -142,10 +142,18 @@ class ApproveReservationSerializer(serializers.Serializer):
     otp = serializers.CharField(max_length=6)
     
 
-class UploadVehicleImageSerializer(serializers.ModelSerializer):
+class VehicleImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = VehicleImages
-        fields = '__all__'
+        fields = ['vehicle_image']
+
+class UploadVehicleImagesSerializer(serializers.Serializer):
+    vehicle = serializers.PrimaryKeyRelatedField(queryset=Vehicle.objects.all())
+    images = serializers.ListField(
+        child=serializers.ImageField(max_length=100000),
+        write_only=True
+    )
+
 
 class UserReservationSerializer(serializers.ModelSerializer):
     vehicle_make = serializers.CharField(source='vehicle.make')
