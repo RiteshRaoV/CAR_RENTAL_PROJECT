@@ -25,7 +25,7 @@ class AddVehicleBasicDetails(generics.ListCreateAPIView):
     
     @swagger_auto_schema(tags=['Vehicle'])
     def get(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
 
 class GetVehicleDetails(generics.RetrieveAPIView):
