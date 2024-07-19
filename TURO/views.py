@@ -238,6 +238,10 @@ class GetUserProfile(generics.RetrieveUpdateDestroyAPIView):
     @swagger_auto_schema(tags=['User-Profile'])
     def delete(self, request, *args, **kwargs):
         return super().put(request, *args, **kwargs)
+    
+    @swagger_auto_schema(tags=['User-Profile'])
+    def patch(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
     @swagger_auto_schema(tags=['User-Profile'])
     def get(self, request, *args, **kwargs):
