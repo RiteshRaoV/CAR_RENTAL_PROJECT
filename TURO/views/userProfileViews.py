@@ -1,14 +1,25 @@
 from TURO.models import UserProfile
-from TURO.serializers.userProfileSerializers import UserProfileSerializer
+from TURO.serializers.userProfileSerializers import (
+    UserProfileDetailSerializer,
+    UserProfileSerializer,
+)
 from rest_framework import generics
+from rest_framework.exceptions import NotFound
 from rest_framework.parsers import MultiPartParser, FormParser
 from drf_yasg.utils import swagger_auto_schema
 
 
 class GetUserProfile(generics.RetrieveUpdateDestroyAPIView):
     queryset = UserProfile.objects.all()
-    serializer_class = UserProfileSerializer
-    lookup_field = "user"
+    serializer_class = UserProfileDetailSerializer
+
+    def get_object(self):
+        user_id = self.kwargs.get("user_id")
+
+        try:
+            return UserProfile.objects.get(user=user_id)
+        except UserProfile.DoesNotExist:
+            raise NotFound("User-Profile does not exist")
 
     @swagger_auto_schema(tags=["User-Profile"])
     def put(self, request, *args, **kwargs):
@@ -16,11 +27,11 @@ class GetUserProfile(generics.RetrieveUpdateDestroyAPIView):
 
     @swagger_auto_schema(tags=["User-Profile"])
     def delete(self, request, *args, **kwargs):
-        return super().put(request, *args, **kwargs)
+        return super().delete(request, *args, **kwargs)
 
     @swagger_auto_schema(tags=["User-Profile"])
     def patch(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
+        return super().patch(request, *args, **kwargs)
 
     @swagger_auto_schema(tags=["User-Profile"])
     def get(self, request, *args, **kwargs):

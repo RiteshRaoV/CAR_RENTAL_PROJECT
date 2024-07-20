@@ -1,6 +1,7 @@
 from django.urls import path
 from MY_SITE import settings
 from django.conf.urls.static import static
+from TURO.views.reviewsView import ReviewsUpdate, ReviewsView
 from TURO.views.vehicleViews import (
     AddVehicleBasicDetails,
     DeleteVehicleView,
@@ -79,8 +80,14 @@ urlpatterns = [
         VehicleReservations.as_view(),
         name="vehicle-reservations",
     ),
-    path("user-profile/<int:user>/", GetUserProfile.as_view(), name="user-profile"),
+    path("user-profile/<int:user_id>/", GetUserProfile.as_view(), name="user-profile"),
     path(
         "create-user-profile/", CreateUserProfile.as_view(), name="create-user-profile"
+    ),
+    path("review/", ReviewsView.as_view(), name="get-review"),
+    path(
+        "update-review/user/<int:user_id>/vehicle/<int:vehicle_id>",
+        ReviewsUpdate.as_view(),
+        name="update-review",
     ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

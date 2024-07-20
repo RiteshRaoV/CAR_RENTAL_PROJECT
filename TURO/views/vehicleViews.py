@@ -63,7 +63,7 @@ class VehicleDocumentUploadView(generics.UpdateAPIView):
 
     @swagger_auto_schema(tags=["Vehicle"])
     def patch(self, request, *args, **kwargs):
-        return super().put(request, *args, **kwargs)
+        return super().patch(request, *args, **kwargs)
 
 
 class UploadVehicleImageView(APIView):
