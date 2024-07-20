@@ -1,5 +1,5 @@
 from TURO.models import Feature, Vehicle
-from TURO.serializers import FeatureSerializer
+from TURO.serializers.vehicleSerializers import FeatureSerializer
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.response import Response

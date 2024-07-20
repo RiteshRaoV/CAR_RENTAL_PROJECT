@@ -1,5 +1,5 @@
 from TURO.models import UserProfile
-from TURO.serializers import UserProfileSerializer
+from TURO.serializers.userProfileSerializers import UserProfileSerializer
 from rest_framework import generics
 from rest_framework.parsers import MultiPartParser, FormParser
 from drf_yasg.utils import swagger_auto_schema

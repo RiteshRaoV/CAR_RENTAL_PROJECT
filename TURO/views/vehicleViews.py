@@ -1,6 +1,6 @@
 from TURO import serializers
 from TURO.models import Vehicle, VehicleImages
-from TURO.serializers import (
+from TURO.serializers.vehicleSerializers import (
     UploadVehicleImagesSerializer,
     VehicleBasicDetailsSerializer,
     VehicleDetails,
@@ -84,18 +84,25 @@ class UploadVehicleImageView(APIView):
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class DeleteVehicleView(APIView):
-    @swagger_auto_schema(tags=['Vehicle'])
+    @swagger_auto_schema(tags=["Vehicle"])
     def delete(self, request, vehicle_id, *args, **kwargs):
         try:
             vehicle = Vehicle.objects.get(id=vehicle_id)
             reservations = vehicle.reservations.filter(
-                Q(status='pending') | Q(status='confirmed'))
+                Q(status="pending") | Q(status="confirmed")
+            )
 
             if reservations.exists():
-                return Response({"error": "Vehicle has pending reservations"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {"error": "Vehicle has pending reservations"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
 
             vehicle.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Vehicle.DoesNotExist:
-            return Response({"error": "Vehicle not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"error": "Vehicle not found"}, status=status.HTTP_404_NOT_FOUND
+            )

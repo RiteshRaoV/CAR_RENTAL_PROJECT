@@ -1,5 +1,5 @@
 from TURO.models import Reservation, UserProfile
-from TURO.serializers import (
+from TURO.serializers.reservationSerializers import (
     ApproveReservationSerializer,
     ReservationSerializer,
     UserReservationSerializer,
