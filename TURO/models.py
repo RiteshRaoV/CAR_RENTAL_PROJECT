@@ -26,6 +26,10 @@ class UserProfile(models.Model):
 
 
 class Vehicle(models.Model):
+    TRANSMISSION_CHOICES = [
+        ('manual','Manual'),
+        ('automatic','Automatic')
+    ]
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="vehicles"
     )
@@ -35,6 +39,7 @@ class Vehicle(models.Model):
     engine_capacity = models.IntegerField(
         default=0, validators=[MinValueValidator(0), MaxValueValidator(10000)]
     )
+    transmission = models.CharField(max_length=25,choices=TRANSMISSION_CHOICES,default=None)
     year = models.IntegerField(default=0)
     price_per_day = models.DecimalField(max_digits=10, decimal_places=2)
     city = models.CharField(max_length=255)

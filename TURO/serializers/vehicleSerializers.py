@@ -23,6 +23,7 @@ class VehicleDetails(serializers.ModelSerializer):
             "model",
             "thumbnail",
             "engine_capacity",
+            "transmission",
             "year",
             "price_per_day",
             "city",
@@ -59,6 +60,7 @@ class VehicleBasicDetailsSerializer(serializers.ModelSerializer):
             "model",
             "thumbnail",
             "engine_capacity",
+            "transmission",
             "year",
             "price_per_day",
             "city",
@@ -91,6 +93,8 @@ class VehicleBasicDetailsSerializer(serializers.ModelSerializer):
         make = validated_data["make"]
         model = validated_data["model"]
         year = validated_data["year"]
+        engine_capacity=validated_data["engine_capacity"]
+        transmission=validated_data["transmission"]
         price_per_day = validated_data["price_per_day"]
         city = validated_data["city"]
         address = validated_data["address"]
@@ -103,6 +107,8 @@ class VehicleBasicDetailsSerializer(serializers.ModelSerializer):
             make=make,
             model=model,
             year=year,
+            engine_capacity=engine_capacity,
+            transmission=transmission,
             price_per_day=price_per_day,
             city=city,
             address=address,
@@ -141,6 +147,7 @@ class UpdateVehicleBasicDetailsSerializer(serializers.ModelSerializer):
             "make",
             "model",
             "engine_capacity",
+            "transmission",
             "year",
             "price_per_day",
             "city",

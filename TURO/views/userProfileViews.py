@@ -1,10 +1,10 @@
-from TURO.models import UserProfile
+from TURO.models import Reservation, UserProfile
 from TURO.serializers.userProfileSerializers import (
     UserProfileDetailSerializer,
     UserProfileSerializer,
 )
 from rest_framework import generics
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, PermissionDenied
 from rest_framework.parsers import MultiPartParser, FormParser
 from drf_yasg.utils import swagger_auto_schema
 
@@ -20,6 +20,14 @@ class GetUserProfile(generics.RetrieveUpdateDestroyAPIView):
             return UserProfile.objects.get(user=user_id)
         except UserProfile.DoesNotExist:
             raise NotFound("User-Profile does not exist")
+        
+    def perform_destroy(self, instance):
+        user = instance.user
+        
+        if Reservation.objects.filter(user=user, status__in=['pending', 'confirmed']).exists():
+            raise PermissionDenied("User cannot be deleted as they have pending or confirmed reservations.")
+
+        instance.delete()
 
     @swagger_auto_schema(tags=["User-Profile"])
     def put(self, request, *args, **kwargs):
