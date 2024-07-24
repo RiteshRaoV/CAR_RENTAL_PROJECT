@@ -1,5 +1,5 @@
 from TURO import serializers
-from TURO.models import Vehicle, VehicleImages
+from TURO.models import UserProfile, Vehicle, VehicleImages
 from TURO.serializers.vehicleSerializers import (
     UploadVehicleImagesSerializer,
     VehicleBasicDetailsSerializer,
@@ -13,6 +13,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.exceptions import PermissionDenied
 from drf_yasg.utils import swagger_auto_schema
 
 from TURO_CLASSIFIEDS.models import Listing
@@ -21,6 +22,15 @@ from TURO_CLASSIFIEDS.models import Listing
 class AddVehicleBasicDetails(generics.ListCreateAPIView):
     queryset = Vehicle.objects.all()
     serializer_class = VehicleBasicDetailsSerializer
+    
+    def perform_create(self, serializer):
+        user = serializer.validated_data['owner']
+        try:
+            UserProfile.objects.get(user=user)
+            serializer.save()
+        except UserProfile.DoesNotExist:
+            raise PermissionDenied("Create your profile to proceed.")
+            
 
     @swagger_auto_schema(tags=["Vehicle"])
     def post(self, request, *args, **kwargs):

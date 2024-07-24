@@ -248,7 +248,11 @@ class GetSellerProfile(APIView):
 
         if request.status not in ['pending','rejected']:
             seller = request.listing.vehicle.owner
-            seller_profile = UserProfile.objects.get(user=seller)
-            return Response(SellerProfileSerializer(seller_profile).data,status=status.HTTP_200_OK)
+            try:
+                seller_profile = UserProfile.objects.get(user=seller)
+                return Response(SellerProfileSerializer(seller_profile).data,status=status.HTTP_200_OK)
+            except UserProfile.DoesNotExist:
+                raise NotFound('The user profile does not exist')
+                
         else:
             return Response({"error":"Your request is not yet accepted by the seller"},status=status.HTTP_401_UNAUTHORIZED)
