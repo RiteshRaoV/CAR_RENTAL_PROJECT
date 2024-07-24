@@ -16,7 +16,7 @@ pip install mysqlclient
 
 pip install drf-yasg
 
-pip install djangorestframework
+pip install djangorestframework djangorestframework-simplejwt
 
 pip install pillow
 

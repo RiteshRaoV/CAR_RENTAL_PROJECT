@@ -32,8 +32,10 @@ schema_view = get_schema_view(
 )
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("auth/", include("AUTH.urls")),
+    path("api/auth/", include("AUTH.urls")),
+    path('api-auth/', include('rest_framework.urls')),
     path("", include("TURO.urls")),
+    path("classifieds/",include("TURO_CLASSIFIEDS.urls")),
     re_path(r'^swagger(?P<format>\.json|\.yaml)$',
             schema_view.without_ui(cache_timeout=0), name='schema-json'),
     re_path(r'^swagger/$', schema_view.with_ui('swagger',

@@ -8,6 +8,8 @@ from rest_framework.exceptions import NotFound, PermissionDenied
 from rest_framework.parsers import MultiPartParser, FormParser
 from drf_yasg.utils import swagger_auto_schema
 
+from TURO_CLASSIFIEDS.models import Listing
+
 
 class GetUserProfile(generics.RetrieveUpdateDestroyAPIView):
     queryset = UserProfile.objects.all()
@@ -24,8 +26,10 @@ class GetUserProfile(generics.RetrieveUpdateDestroyAPIView):
     def perform_destroy(self, instance):
         user = instance.user
         
-        if Reservation.objects.filter(user=user, status__in=['pending', 'confirmed']).exists():
+        if Reservation.objects.filter(user=user, status__in=['pending', 'confirmed']).exists() :
             raise PermissionDenied("User cannot be deleted as they have pending or confirmed reservations.")
+        elif Listing.objects.filter(vehicle__owner=user,ad_status__in=['pending','For Sale']).exists():
+            raise PermissionDenied("User cannot be deleted as they have vehicles up for sale.")
 
         instance.delete()
 

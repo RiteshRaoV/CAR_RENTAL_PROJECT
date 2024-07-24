@@ -1,13 +1,11 @@
-from django.shortcuts import redirect
+# AUTH/urls.py
 from django.urls import path
-from . import views
-
+from .views import CustomTokenObtainPairView, register, protected_view
+from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
-    path('signup/', views.signup, name='signup'),
-    path('signin/', views.signin, name='signin'),
-    path('password-reset/', views.password_reset_link, name='password_reset'),
-    path('reset-password/<uidb64>/<token>/', views.password_reset_link_check, name='reset_password'),
-    path('logout/', views.logout_view, name='logout'),
-    path("home/",views.landing_page,name="home")
+    path('login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('register/', register, name='register'),
+    path('protected/', protected_view, name='protected_view'),
 ]

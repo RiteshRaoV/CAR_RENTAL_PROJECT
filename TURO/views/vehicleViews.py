@@ -15,6 +15,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from drf_yasg.utils import swagger_auto_schema
 
+from TURO_CLASSIFIEDS.models import Listing
+
 
 class AddVehicleBasicDetails(generics.ListCreateAPIView):
     queryset = Vehicle.objects.all()
@@ -97,7 +99,12 @@ class DeleteVehicleView(APIView):
             if reservations.exists():
                 return Response(
                     {"error": "Vehicle has pending reservations"},
-                    status=status.HTTP_400_BAD_REQUEST,
+                    status=status.HTTP_403_FORBIDDEN,
+                )
+            if Listing.objects.filter(vehicle=vehicle_id,ad_status__in=['For Sale']).exists():
+                return Response(
+                    {"error": "Vehicle is listed for sale,delete the listing to proceed"},
+                    status=status.HTTP_403_FORBIDDEN,
                 )
 
             vehicle.delete()

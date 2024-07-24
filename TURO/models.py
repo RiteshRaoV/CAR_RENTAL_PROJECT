@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator,RegexValidator
 import random
 import string
 
@@ -20,7 +20,16 @@ class UserProfile(models.Model):
     dl_image = models.ImageField(upload_to="dl/", blank=True, null=True)
     city = models.CharField(max_length=100)
     address = models.CharField(max_length=255)
-
+    contact_number = models.CharField(
+        max_length=10,
+        validators=[
+            RegexValidator(
+                regex=r'^\d{10}$',
+                message='Contact number must be exactly 10 digits.',
+                code='invalid_contact_number'
+            )
+        ]
+    )
     def __str__(self):
         return f"Profile of {self.user.username}"
 
@@ -41,7 +50,7 @@ class Vehicle(models.Model):
     )
     transmission = models.CharField(max_length=25,choices=TRANSMISSION_CHOICES,default=None)
     year = models.IntegerField(default=0)
-    price_per_day = models.DecimalField(max_digits=10, decimal_places=2)
+    price_per_day = models.DecimalField(max_digits=10, decimal_places=2,blank=True,null=True)
     city = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
     location = models.CharField(max_length=100)

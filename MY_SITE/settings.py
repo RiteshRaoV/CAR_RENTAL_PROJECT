@@ -31,23 +31,61 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'AUTH',
+    'TURO',
+    'TURO_CLASSIFIEDS',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'AUTH',
     "drf_yasg",
     "rest_framework",
-    'TURO',
-    
+    'rest_framework_simplejwt.token_blacklist',
 ]
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    ),
+}
+
+AUTHENTICATION_BACKENDS = [
+    'AUTH.backends.EmailBackend',  
+    # 'django.contrib.auth.backends.ModelBackend',  
+]
+
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+}
 # settings.py
 import os
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+ALLOWED_HOSTS=['172.18.4.233','localhost','127.0.0.1']
 
 
 MIDDLEWARE = [
@@ -95,10 +133,7 @@ DATABASES = {
     }
 }
 
-AUTHENTICATION_BACKENDS = [
-    'AUTH.backends.EmailBackend',  # Custom authentication backend
-    'django.contrib.auth.backends.ModelBackend',  # Default authentication backend
-]
+
 LOGIN_URL = '/auth/signin/'
 LOGOUT_REDIRECT_URL = '/auth/signin/'
 # Password validation
