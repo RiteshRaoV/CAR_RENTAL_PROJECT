@@ -16,6 +16,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile"
     )
+    profile_picture = models.ImageField(upload_to="profile-pics/",blank=True,null=True)
     aadhar_image = models.ImageField(upload_to="aadhar/", blank=True, null=True)
     dl_image = models.ImageField(upload_to="dl/", blank=True, null=True)
     city = models.CharField(max_length=100)
@@ -50,12 +51,7 @@ class Vehicle(models.Model):
     )
     transmission = models.CharField(max_length=25,choices=TRANSMISSION_CHOICES,default=None)
     year = models.IntegerField(default=0)
-    price_per_day = models.DecimalField(max_digits=10, decimal_places=2,blank=True,null=True)
-    city = models.CharField(max_length=255)
-    address = models.CharField(max_length=255)
-    location = models.CharField(max_length=100)
     fuel_type = models.CharField(max_length=10)
-    availability = models.BooleanField(default=True)
     features = models.ManyToManyField(Feature, related_name="vehicles", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -70,6 +66,19 @@ class Vehicle(models.Model):
         return f"{self.make} {self.model} ({self.year})"
 
 
+class RentListing(models.Model):
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name="rent_listings")
+    listing_date = models.DateField(auto_now_add=True)
+    price_per_day = models.DecimalField(max_digits=10, decimal_places=2)
+    availability = models.BooleanField(default=True)
+    city = models.CharField(max_length=255)
+    address = models.CharField(max_length=255)
+    location = models.CharField(max_length=100)
+    description = models.TextField(max_length=200)
+    
+    def __str__(self):
+        return f"{self.vehicle.make} - {self.price_per_day} per day"
+    
 class VehicleImages(models.Model):
     vehicle = models.ForeignKey(
         Vehicle, on_delete=models.CASCADE, related_name="images", default=None
@@ -86,8 +95,8 @@ class Reservation(models.Model):
         ("cancelled", "Cancelled"),
     ]
 
-    vehicle = models.ForeignKey(
-        Vehicle, on_delete=models.CASCADE, related_name="reservations"
+    rental_listing  = models.ForeignKey(
+        RentListing, on_delete=models.CASCADE, related_name="reservations"
     )
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="reservations"
@@ -101,7 +110,7 @@ class Reservation(models.Model):
     otp = models.CharField(max_length=6, blank=True, null=True)
 
     def __str__(self):
-        return f"Reservation {self.id} for {self.vehicle}"
+        return f"Reservation {self.id} for {self.rental_listing.vehicle}"
 
     def save(self, *args, **kwargs):
         if not self.otp:

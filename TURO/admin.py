@@ -1,30 +1,57 @@
 from django.contrib import admin
-from .models import Vehicle, Reservation, Review, Feature, UserProfile,VehicleImages
+from .models import RentListing, Vehicle, Reservation, Review, Feature, UserProfile, VehicleImages
 
 
 class VehicleAdmin(admin.ModelAdmin):
-    list_display = ('id','make', 'model', 'year', 'price_per_day', 'location', 'availability', 'owner', 'created_at', 'updated_at')
-    search_fields = ('make', 'model', 'location', 'owner__username')
-    list_filter = ('availability', 'year', 'location', 'created_at')
+    list_display = ('id', 'make', 'model', 'year',
+                    'owner', 'created_at', 'updated_at')
+    search_fields = ('make', 'model', 'owner__username')
+    list_filter = ('year', 'created_at')
     autocomplete_fields = ['owner']
     filter_horizontal = ('features',)
 
 
 class ReservationAdmin(admin.ModelAdmin):
-    list_display = ('id','vehicle', 'user', 'start_date', 'end_date', 'total_price', 'status', 'created_at', 'updated_at', 'otp')
-    search_fields = ('vehicle__make', 'vehicle__model', 'user__username', 'status')
-    list_filter = ('status', 'start_date', 'end_date', 'created_at')
-    autocomplete_fields = ['vehicle', 'user']
+    list_display = (
+        'id',
+        'rental_listing',
+        'user',
+        'start_date',
+        'end_date',
+        'total_price',
+        'status',
+        'created_at',
+        'updated_at',
+        'otp'
+    )
+    search_fields = (
+        'rental_listing__vehicle__make',
+        'rental_listing__vehicle__model',
+        'user__username',
+        'status'
+    )
+    list_filter = (
+        'status',
+        'start_date',
+        'end_date',
+        'created_at'
+    )
+
+
+class RentListingAdmin(admin.ModelAdmin):
+    list_display = ('id', 'listing_date', 'price_per_day',
+                    'availability', 'city')
 
 
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ('user', 'vehicle', 'rating', 'comment', 'created_at')
-    search_fields = ('user__username', 'vehicle__make', 'vehicle__model', 'rating')
+    search_fields = ('user__username', 'vehicle__make',
+                     'vehicle__model', 'rating')
     list_filter = ('rating', 'created_at')
 
 
 class FeatureAdmin(admin.ModelAdmin):
-    list_display = ('id','name',)
+    list_display = ('id', 'name',)
     search_fields = ('name',)
 
 
@@ -40,3 +67,4 @@ admin.site.register(Review, ReviewAdmin)
 admin.site.register(Feature, FeatureAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(VehicleImages)
+admin.site.register(RentListing, RentListingAdmin)

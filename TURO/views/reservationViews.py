@@ -1,3 +1,8 @@
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from drf_yasg.utils import swagger_auto_schema
+
 from TURO.models import Reservation, UserProfile
 from TURO.serializers.reservationSerializers import (
     ApproveReservationSerializer,
@@ -5,11 +10,6 @@ from TURO.serializers.reservationSerializers import (
     UserReservationSerializer,
     VehicleReservationSerializer,
 )
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from drf_yasg.utils import swagger_auto_schema
-
 
 class CreateReservationView(APIView):
     @swagger_auto_schema(
@@ -51,7 +51,7 @@ class CancelReservationView(APIView):
     @swagger_auto_schema(
         tags=["Reservation"],
         request_body=ApproveReservationSerializer,
-        responses={201: ApproveReservationSerializer},
+        responses={200: ApproveReservationSerializer},
     )
     def post(self, request, *args, **kwargs):
         serializer = ApproveReservationSerializer(data=request.data)
@@ -61,14 +61,14 @@ class CancelReservationView(APIView):
 
             try:
                 reservation = Reservation.objects.get(id=reservation_id)
-                vehicle = reservation.vehicle
+                rental_listing = reservation.rental_listing
                 if reservation.otp == otp:
                     reservation.status = "cancelled"
-                    reservation.otp = " "
+                    reservation.otp = ""
                     reservation.total_price = 0
                     reservation.save()
-                    vehicle.availability = True
-                    vehicle.save()
+                    rental_listing.is_active = True
+                    rental_listing.save()
                     return Response(
                         {"status": "Reservation Cancelled"}, status=status.HTTP_200_OK
                     )
@@ -87,7 +87,7 @@ class ApproveReservationView(APIView):
     @swagger_auto_schema(
         tags=["Reservation"],
         request_body=ApproveReservationSerializer,
-        responses={201: ApproveReservationSerializer},
+        responses={200: ApproveReservationSerializer},
     )
     def post(self, request, *args, **kwargs):
         serializer = ApproveReservationSerializer(data=request.data)
@@ -130,13 +130,13 @@ class UserReservationsView(APIView):
 
 class VehicleReservations(APIView):
     @swagger_auto_schema(tags=["Reservation"])
-    def get(self, request, vehicle_id, format=None):
+    def get(self, request, rental_listing_id, format=None):
         try:
-            reservations = Reservation.objects.filter(vehicle_id=vehicle_id)
+            reservations = Reservation.objects.filter(rental_listing_id=rental_listing_id)
             serializer = VehicleReservationSerializer(reservations, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Reservation.DoesNotExist:
             return Response(
-                {"error": "User not found or no reservations"},
+                {"error": "RentalListing not found or no reservations"},
                 status=status.HTTP_404_NOT_FOUND,
             )

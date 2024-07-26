@@ -13,9 +13,8 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.exceptions import PermissionDenied
 from drf_yasg.utils import swagger_auto_schema
-
+from rest_framework.exceptions import NotFound
 from TURO_CLASSIFIEDS.models import Listing
 
 
@@ -29,8 +28,7 @@ class AddVehicleBasicDetails(generics.ListCreateAPIView):
             UserProfile.objects.get(user=user)
             serializer.save()
         except UserProfile.DoesNotExist:
-            raise PermissionDenied("Create your profile to proceed.")
-            
+            raise NotFound("Create your profile to proceed..")
 
     @swagger_auto_schema(tags=["Vehicle"])
     def post(self, request, *args, **kwargs):

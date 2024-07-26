@@ -25,12 +25,7 @@ class VehicleDetails(serializers.ModelSerializer):
             "engine_capacity",
             "transmission",
             "year",
-            "price_per_day",
-            "city",
-            "address",
-            "location",
             "fuel_type",
-            "availability",
             "created_at",
             "updated_at",
             "registration_document",
@@ -62,12 +57,7 @@ class VehicleBasicDetailsSerializer(serializers.ModelSerializer):
             "engine_capacity",
             "transmission",
             "year",
-            "price_per_day",
-            "city",
-            "address",
-            "location",
             "fuel_type",
-            "availability",
             "created_at",
             "updated_at",
             "registration_document",
@@ -95,10 +85,6 @@ class VehicleBasicDetailsSerializer(serializers.ModelSerializer):
         year = validated_data["year"]
         engine_capacity=validated_data["engine_capacity"]
         transmission=validated_data["transmission"]
-        price_per_day = validated_data["price_per_day"]
-        city = validated_data["city"]
-        address = validated_data["address"]
-        location = validated_data["location"]
         fuel_type = validated_data["fuel_type"]
 
         existing_vehicle = Vehicle.objects.filter(
@@ -109,10 +95,6 @@ class VehicleBasicDetailsSerializer(serializers.ModelSerializer):
             year=year,
             engine_capacity=engine_capacity,
             transmission=transmission,
-            price_per_day=price_per_day,
-            city=city,
-            address=address,
-            location=location,
             fuel_type=fuel_type,
         ).first()
 
@@ -149,12 +131,7 @@ class UpdateVehicleBasicDetailsSerializer(serializers.ModelSerializer):
             "engine_capacity",
             "transmission",
             "year",
-            "price_per_day",
-            "city",
-            "address",
-            "location",
             "fuel_type",
-            "availability",
             "features",
         ]
 

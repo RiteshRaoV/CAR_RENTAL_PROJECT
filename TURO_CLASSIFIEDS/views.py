@@ -30,7 +30,12 @@ class CreateAdView(APIView):
                     {"message": "Vehicle does not exist."},
                     status=status.HTTP_404_NOT_FOUND
                 )
-
+            if not vehicle_instance.insurance_document or not vehicle_instance.registration_document:
+                return Response(
+                    {"message": "Vehicle documents not found."},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+            
             if Listing.objects.filter(vehicle=vehicle_instance).exists():
                 return Response(
                     {"message": "Ad for this vehicle already exists!"},
@@ -101,9 +106,6 @@ class AddVehicleForSaleView(APIView):
             year = serializer.validated_data["year"]
             engine_capacity = serializer.validated_data["engine_capacity"]
             transmission = serializer.validated_data["transmission"]
-            city = serializer.validated_data["city"]
-            address = serializer.validated_data["address"]
-            location = serializer.validated_data["location"]
             fuel_type = serializer.validated_data["fuel_type"]
             existing_vehicle = Vehicle.objects.filter(
                 owner=owner,
@@ -113,9 +115,6 @@ class AddVehicleForSaleView(APIView):
                 year=year,
                 engine_capacity=engine_capacity,
                 transmission=transmission,
-                city=city,
-                address=address,
-                location=location,
                 fuel_type=fuel_type,
             ).first()
 
@@ -128,6 +127,12 @@ class AddVehicleForSaleView(APIView):
                     status=status.HTTP_400_BAD_REQUEST
                 )
             else:
+                user = serializer.validated_data['owner']
+                try:
+                    UserProfile.objects.get(user=user)
+                    serializer.save()
+                except UserProfile.DoesNotExist:
+                    raise NotFound("Create your profile to proceed..")
                 new_vehicle = Vehicle.objects.create(
                     owner=owner,
                     category=category,
@@ -136,9 +141,6 @@ class AddVehicleForSaleView(APIView):
                     year=year,
                     engine_capacity=engine_capacity,
                     transmission=transmission,
-                    city=city,
-                    address=address,
-                    location=location,
                     fuel_type=fuel_type,
                 )
                 for feature_data in features_data:
@@ -252,7 +254,6 @@ class GetSellerProfile(APIView):
                 seller_profile = UserProfile.objects.get(user=seller)
                 return Response(SellerProfileSerializer(seller_profile).data,status=status.HTTP_200_OK)
             except UserProfile.DoesNotExist:
-                raise NotFound('The user profile does not exist')
-                
+                raise NotFound("Seller profile not found")
         else:
             return Response({"error":"Your request is not yet accepted by the seller"},status=status.HTTP_401_UNAUTHORIZED)

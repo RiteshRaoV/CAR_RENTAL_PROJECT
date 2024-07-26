@@ -4,7 +4,7 @@ from .views import AcceptInterestRequest, AddVehicleForSaleView, AllListings, Cr
 
 
 urlpatterns = [
-    path('add-vehicle/',AddVehicleForSaleView.as_view(),name="add-vehicle-for-sale"),
+    # path('add-vehicle/',AddVehicleForSaleView.as_view(),name="add-vehicle-for-sale"),
     path('update-vehicle/<int:vehicle_id>',UpdateSellingVehicleDetails.as_view(),name='update-vehicel'),
     path('create-listing/',CreateAdView.as_view(),name='create-ad'),
     path('update-listing/<int:listing_id>/',UpdateAdView.as_view(),name='update-ad'),

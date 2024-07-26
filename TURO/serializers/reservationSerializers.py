@@ -8,25 +8,27 @@ from ..models import Reservation
 class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation
-        fields = ["vehicle", "user", "start_date", "end_date"]
+        fields = ["rental_listing", "user", "start_date", "end_date"]
 
     def create(self, validated_data):
-        vehicle = validated_data["vehicle"]
+        rental_listing = validated_data["rental_listing"]
         start_date = validated_data["start_date"]
         end_date = validated_data["end_date"]
 
         # Calculate the number of days
         num_days = (end_date - start_date).days
-        total_price = num_days * vehicle.price_per_day
+        total_price = num_days * rental_listing.price_per_day
 
         # Generate a 6-digit OTP
-        otp = random.randint(100000, 999999)
-        # Check if the vehicle is available
-        if not vehicle.availability:
-            raise ValidationError("The vehicle is not available for reservation.")
+        otp = "".join(random.choices("0123456789", k=6))
+
+        # Check if the rental listing is available
+        if not rental_listing.availability:
+            raise ValidationError("The rental listing is not available for reservation.")
+
         # Create the reservation
         reservation = Reservation.objects.create(
-            vehicle=vehicle,
+            rental_listing=rental_listing,
             user=validated_data["user"],
             start_date=start_date,
             end_date=end_date,
@@ -35,9 +37,9 @@ class ReservationSerializer(serializers.ModelSerializer):
             otp=otp,
         )
 
-        # Set vehicle availability to false
-        vehicle.availability = False
-        vehicle.save()
+        # Set rental listing status to unavailable
+        rental_listing.availability = False
+        rental_listing.save()
 
         return reservation
 
@@ -48,17 +50,17 @@ class ApproveReservationSerializer(serializers.Serializer):
 
 
 class UserReservationSerializer(serializers.ModelSerializer):
-    vehicle_make = serializers.CharField(source="vehicle.make")
-    vehicle_model = serializers.CharField(source="vehicle.model")
-    vehicle_id = serializers.IntegerField(source="vehicle.id")
+    rental_listing_make = serializers.CharField(source="rental_listing.vehicle.make")
+    rental_listing_model = serializers.CharField(source="rental_listing.vehicle.model")
+    rental_listing_id = serializers.IntegerField(source="rental_listing.id")
 
     class Meta:
         model = Reservation
         fields = [
             "id",
-            "vehicle_id",
-            "vehicle_make",
-            "vehicle_model",
+            "rental_listing_id",
+            "rental_listing_make",
+            "rental_listing_model",
             "user",
             "start_date",
             "end_date",
@@ -67,18 +69,18 @@ class UserReservationSerializer(serializers.ModelSerializer):
 
 
 class VehicleReservationSerializer(serializers.ModelSerializer):
-    vehicle_make = serializers.CharField(source="vehicle.make")
-    vehicle_model = serializers.CharField(source="vehicle.model")
-    vehicle_id = serializers.IntegerField(source="vehicle.id")
+    rental_listing_make = serializers.CharField(source="rental_listing.vehicle.make")
+    rental_listing_model = serializers.CharField(source="rental_listing.vehicle.model")
+    rental_listing_id = serializers.IntegerField(source="rental_listing.id")
     reservation_id = serializers.IntegerField(source="id")
 
     class Meta:
         model = Reservation
         fields = [
             "reservation_id",
-            "vehicle_id",
-            "vehicle_make",
-            "vehicle_model",
+            "rental_listing_id",
+            "rental_listing_make",
+            "rental_listing_model",
             "user",
             "start_date",
             "end_date",
